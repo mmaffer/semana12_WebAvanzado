@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server'
-import type { Book } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
+
+interface BookRecord {
+  id: string
+  title: string
+  description: string | null
+  isbn: string | null
+  publishedYear: number | null
+  genre: string | null
+  pages: number | null
+  authorId: string
+  createdAt: Date
+  updatedAt: Date
+}
 
 export async function GET(
   _request: Request,
@@ -20,7 +32,7 @@ export async function GET(
       return NextResponse.json({ error: 'Autor no encontrado' }, { status: 404 })
     }
 
-    const books: Book[] = author.books
+    const books = author.books as BookRecord[]
     const booksWithYear = books.filter(b => b.publishedYear !== null)
     const booksWithPages = books.filter(b => b.pages !== null)
 
